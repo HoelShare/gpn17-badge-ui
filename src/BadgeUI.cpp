@@ -77,18 +77,22 @@ void Menu::draw(TFT_ILI9163C* tft, Theme * theme, uint16_t offsetX, uint16_t off
     uint16_t height = _TFTHEIGHT-offsetY-1;
     int i = 0;
     while(currentDraw && i < itemsPerPage) {
-        tft->setCursor(10+offsetX, (i*height/itemsPerPage)+25+offsetY);
-        tft->drawLine(offsetX, i*height/itemsPerPage+offsetY, width, i*height/itemsPerPage+offsetY, theme->foregroundColor);
+        if(i) {
+            int offset = (((_TFTHEIGHT / itemsPerPage) / 2) + 25) - 9 * currentDraw->getNumRows();
+            tft->drawLine(0, i * (_TFTHEIGHT / itemsPerPage) + offset, _TFTWIDTH,
+                          i * (_TFTHEIGHT / itemsPerPage) + offset, theme->foregroundColor);
+        }
+        tft->setCursor(10, i*(_TFTHEIGHT/itemsPerPage) + (((_TFTHEIGHT/itemsPerPage)/2)+25));
         currentDraw->draw(tft, theme, 0, 0);
+        i+= currentDraw->getNumRows();
         currentDraw = currentDraw->next;
-        i++;
     }
     this->dirty = false;
 }
 
 void MenuItem::draw(TFT_ILI9163C* tft, Theme * theme, uint16_t offsetX, uint16_t offsetY){
     tft->setFont(&FreeSans7pt7b);
-    tft->setTextSize(1);
+    tft->setTextSize(this->getNumRows());
     if(selected) {
         tft->setTextColor(theme->selectedTextColor);
     } else {

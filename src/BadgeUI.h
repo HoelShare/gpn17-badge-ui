@@ -321,7 +321,7 @@ private:
 class MenuItem: public UIElement {
 public:
   friend class Menu;
-  MenuItem(String text, std::function<void(void)> trigger): text(text), triggerFunc(trigger) {
+  MenuItem(String text, std::function<void(void)> trigger, int numRows = 3): text(text), triggerFunc(trigger), numRows(numRows) {
   } 
 
   void draw(TFT_ILI9163C* tft, Theme * theme, uint16_t offsetX, uint16_t offsetY);
@@ -341,10 +341,19 @@ public:
   void setTrigger(std::function<void()> triggr) {
     this->triggerFunc = triggr;
   }
+
+  int getNumRows() {
+    return this->numRows;
+  }
+
+  void setNumRows(int numRows) {
+    this->numRows = numRows;
+  }
 private:
   String text;
   std::function<void(void)> triggerFunc;
   bool selected = false;
+  int numRows;
 protected:
   MenuItem* prev = nullptr;
   MenuItem* next = nullptr;
